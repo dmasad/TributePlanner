@@ -189,17 +189,25 @@ class Agent(object):
     def receive_threat(self, attacker_id):
         '''
         Decide whether to pay tribute, or go to war.
-        Currently only short-term assessment
-        This is where the bulk of the AI will go.
+        Use one-action lookahead static evaluation.
         '''
+        # Simulate tribute scenario
+        tribute_scenario = copy.deepcopy(self.model)
+        tribute = min(self.model.tribute, self.wealth)
+        tribute_scenario.agents[self.id_num].change_wealth(-tribute)
+        tribute_scenario.agents[attacker_id].change_wealth(tribute)
+        tribute_score = tribute_scenario.agents[self.id_num].evaluate_position()
 
-        attacker = self.model.agents[attacker_id]
-        war_cost = attacker.wealth * self.model.war_cost
-        if war_cost < self.model.tribute:
+        # Simulate war scenario
+        war_scenario = copy.deepcopy(self.model)
+        war_scenario.war(attacker_id, self.id_num)
+        war_score = war_scenario.agents[self.id_num].evaluate_position()        
+
+        if war_score < tribute_score:
             self.model.war(attacker_id, self.id_num)
         else:
-            tribute = min(self.model.tribute, self.wealth)
-            attacker.change_wealth(tribute)
+            #tribute = min(self.model.tribute, self.wealth)
+            self.model.agents[attacker_id].change_wealth(tribute)
             self.change_wealth(-tribute)
 
             if self.model.verbose:
