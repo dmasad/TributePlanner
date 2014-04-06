@@ -159,15 +159,30 @@ class Agent(object):
         copy of the model and testing the outcome.
         '''
         model_copy = copy.deepcopy(self.model)
+        model_copy.depth += 1
         # Simulate the threat
         if self.model.verbose:
             print "- Begin internal simulation -"
         model_copy.agents[target.id_num].receive_threat(self.id_num)
         if self.model.verbose:
             print "- End internal simulation -"
-        new_wealth = model_copy.agents[self.id_num].wealth
-        gain = new_wealth - self.wealth
+        #new_wealth = model_copy.agents[self.id_num].wealth
+        #gain = new_wealth - self.wealth
+        gain = model_copy.agents[self.id_num].evaluate_position()
         return gain
+
+    def evaluate_position(self):
+        '''
+        Evaluate hegemony position, defined as difference between own wealth
+        and greatest neighbor wealth.
+        '''
+
+        neighbor_ids = self.model.graph.neighbors(self.id_num)
+        neighbor_wealth = [self.model.agents[id_num].wealth 
+                    for id_num in neighbor_ids]
+        max_wealth = max(neighbor_wealth)
+        return self.wealth - max_wealth
+
 
 
 
