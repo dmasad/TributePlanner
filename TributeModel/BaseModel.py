@@ -10,6 +10,7 @@ to pay tribute, or go to war.
 '''
 from __future__ import division
 
+import copy
 import random
 import networkx as nx
 
@@ -154,14 +155,19 @@ class Agent(object):
 
     def evaluate_gain(self, target):
         '''
-        Statically evaluate the results of war or tribute.
+        Statically evaluate the results of war or tribute by creating a recursive
+        copy of the model and testing the outcome.
         '''
-        cost_to_enemy = self.wealth * self.model.war_cost
-        if cost_to_enemy < self.model.tribute:
-            val = -target.wealth * self.model.war_cost
-        else:
-            val = min(self.model.tribute, target.wealth)
-        return val
+        model_copy = copy.deepcopy(self.model)
+        # Simulate the threat
+        if self.model.verbose:
+            print "- Begin internal simulation -"
+        model_copy.agents[target.id_num].receive_threat(self.id_num)
+        if self.model.verbose:
+            print "- End internal simulation -"
+        new_wealth = model_copy.agents[self.id_num].wealth
+        gain = new_wealth - self.wealth
+        return gain
 
 
 
