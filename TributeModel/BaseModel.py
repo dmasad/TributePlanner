@@ -47,6 +47,8 @@ class Model(object):
         # Model run statistics
         self.wars = 0
         
+        # Introspective variables for recursive copying.
+        self.depth = 0 # Current copy depth; 0 is the 'real' model.
 
         self.war_series = []
         self.agent_wealth_series = {i: [] for i in self.agents}
@@ -126,8 +128,8 @@ class Agent(object):
         vulnerability = {}
         for nid in neighbor_ids:
             neighbor = self.model.agents[nid]
-            target_wealth = neighbor.wealth
-            vulnerability[nid] = (self.wealth - target_wealth) / self.wealth
+            #vulnerability[nid] = self.evaluate_vulnerability(neighbor)
+            vulnerability[nid] = self.evaluate_gain(neighbor)
 
         target_id = max(vulnerability, 
             key=lambda x: vulnerability[x])
@@ -135,6 +137,33 @@ class Agent(object):
         if vulnerability[target_id] > 0:
             target = self.model.agents[target_id]
             target.receive_threat(self.id_num)
+
+
+    def evaluate_vulnerability(self, target):
+        '''
+        Evaluate a target's vulnerability using Axelrod's original heuristic.
+
+            Vulnerability = (Own Wealth - Target Wealth) / Own Wealth
+
+        Args:
+            target: An Agent object to evaluate.
+        '''
+
+        target_wealth = target.wealth
+        return (self.wealth - target_wealth) / self.wealth
+
+    def evaluate_gain(self, target):
+        '''
+        Statically evaluate the results of war or tribute.
+        '''
+        cost_to_enemy = self.wealth * self.model.war_cost
+        if cost_to_enemy < self.model.tribute:
+            val = -target.wealth * self.model.war_cost
+        else:
+            val = min(self.model.tribute, target.wealth)
+        return val
+
+
 
     def receive_threat(self, attacker_id):
         '''
