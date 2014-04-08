@@ -87,7 +87,7 @@ class Model(object):
         '''
 
         if self.verbose:
-            print "War between", attacker_id, "and", defender_id
+            print "\t"*self.depth, "War between", attacker_id, "and", defender_id
 
         self.wars += 1
 
@@ -99,6 +99,16 @@ class Model(object):
         attacker.change_wealth(-self.war_cost * defender_wealth)
         defender.change_wealth(-self.war_cost * attacker_wealth)
 
+    def copy(self):
+        '''
+        Make a deep copy of this object and return it, incrementing the depth.
+        '''
+        clone = copy.deepcopy(self)
+        clone.depth += 1
+        #if self.verbose:
+        print "\t"*self.depth, "Spawning new model at depth", clone.depth
+        return clone
+
 
 class Agent(object):
     def __init__(self, id_num, model):
@@ -108,6 +118,7 @@ class Agent(object):
         self.id_num = id_num
         self.model = model
         self.wealth = random.randint(300, 500) # Random initial wealth
+        self.max_depth = 2
 
     def change_wealth(self, delta_wealth):
         '''
@@ -158,17 +169,18 @@ class Agent(object):
         Statically evaluate the results of war or tribute by creating a recursive
         copy of the model and testing the outcome.
         '''
-        model_copy = copy.deepcopy(self.model)
-        model_copy.depth += 1
+        model_copy = self.model.copy()
         # Simulate the threat
-        if self.model.verbose:
-            print "- Begin internal simulation -"
+        #if self.model.verbose:
+        #    print "- Begin internal simulation -"
+        
         model_copy.agents[target.id_num].receive_threat(self.id_num)
-        if self.model.verbose:
-            print "- End internal simulation -"
+        gain = self.look_ahead(model_copy)
+
+        #if self.model.verbose:
+        #    print "- End internal simulation -"
         #new_wealth = model_copy.agents[self.id_num].wealth
         #gain = new_wealth - self.wealth
-        gain = model_copy.agents[self.id_num].evaluate_position()
         return gain
 
     def evaluate_position(self):
@@ -184,26 +196,26 @@ class Agent(object):
         return self.wealth - max_wealth
 
 
-
-
     def receive_threat(self, attacker_id):
         '''
         Decide whether to pay tribute, or go to war.
         Use one-action lookahead static evaluation.
         '''
         # Simulate tribute scenario
-        tribute_scenario = copy.deepcopy(self.model)
+        tribute_scenario = self.model.copy()
         tribute = min(self.model.tribute, self.wealth)
         tribute_scenario.agents[self.id_num].change_wealth(-tribute)
         tribute_scenario.agents[attacker_id].change_wealth(tribute)
         tribute_score = tribute_scenario.agents[self.id_num].evaluate_position()
+        #tribute_score = self.look_ahead(tribute_scenario)
 
         # Simulate war scenario
         war_scenario = copy.deepcopy(self.model)
         war_scenario.war(attacker_id, self.id_num)
+        #war_score = self.look_ahead(war_scenario)
         war_score = war_scenario.agents[self.id_num].evaluate_position()        
 
-        if war_score < tribute_score:
+        if war_score > tribute_score:
             self.model.war(attacker_id, self.id_num)
         else:
             #tribute = min(self.model.tribute, self.wealth)
@@ -211,7 +223,21 @@ class Agent(object):
             self.change_wealth(-tribute)
 
             if self.model.verbose:
-                print self.id_num, "paying tribute to", attacker_id
+                print "\t"*self.model.depth, self.id_num, "paying tribute to", attacker_id
+
+    def look_ahead(self, model):
+        '''
+        Evaluate a model copy forward
+        '''
+        for i in range(self.max_depth - model.depth):
+            model.step()
+
+        return model.agents[self.id_num].evaluate_position()
+
+
+
+
+
 
 
 
