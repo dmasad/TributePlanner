@@ -12,8 +12,9 @@ from __future__ import division
 
 import copy
 import random
-import networkx as nx
 
+import networkx as nx
+import matplotlib.pyplot as plt
 
 class Model(object):
     '''
@@ -108,6 +109,20 @@ class Model(object):
         #if self.verbose:
         print "\t"*self.depth, "Spawning new model at depth", clone.depth
         return clone
+
+    def plot(self, fig=None):
+        '''
+        '''
+        if fig is None:
+            fig = plt.figure(figsize=(12,4))
+        ax1 = fig.add_subplot(121)
+        ax1.bar(range(len(self.war_series)), self.war_series)
+
+        ax2 = fig.add_subplot(122)
+        for s in self.agent_wealth_series.values():
+            ax2.plot(s)
+        return fig
+
 
 
 class Agent(object):
@@ -206,14 +221,14 @@ class Agent(object):
         tribute = min(self.model.tribute, self.wealth)
         tribute_scenario.agents[self.id_num].change_wealth(-tribute)
         tribute_scenario.agents[attacker_id].change_wealth(tribute)
-        tribute_score = tribute_scenario.agents[self.id_num].evaluate_position()
-        #tribute_score = self.look_ahead(tribute_scenario)
+        #tribute_score = tribute_scenario.agents[self.id_num].evaluate_position()
+        tribute_score = self.look_ahead(tribute_scenario)
 
         # Simulate war scenario
-        war_scenario = copy.deepcopy(self.model)
+        war_scenario = self.model.copy()
         war_scenario.war(attacker_id, self.id_num)
-        #war_score = self.look_ahead(war_scenario)
-        war_score = war_scenario.agents[self.id_num].evaluate_position()        
+        war_score = self.look_ahead(war_scenario)
+        #war_score = war_scenario.agents[self.id_num].evaluate_position()        
 
         if war_score > tribute_score:
             self.model.war(attacker_id, self.id_num)
