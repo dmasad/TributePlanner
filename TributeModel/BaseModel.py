@@ -52,7 +52,8 @@ class Model(object):
         # Introspective variables for recursive copying.
         self.depth = 0 # Current copy depth; 0 is the 'real' model.
 
-        self.war_series = []
+        self.war_series = [] # Count the number of wars fought
+        self.war_scale = [] # Track the relative damage done in each war.
         self.agent_wealth_series = {i: [] for i in self.agents}
 
         # Visualization
@@ -90,7 +91,7 @@ class Model(object):
         if self.verbose:
             print "\t"*self.depth, "War between", attacker_id, "and", defender_id
 
-        self.wars += 1
+        self.wars += 1 # Increment the counter of wars fought this turn
 
         attacker = self.agents[attacker_id]
         defender = self.agents[defender_id]
@@ -100,14 +101,28 @@ class Model(object):
         attacker.change_wealth(-self.war_cost * defender_wealth)
         defender.change_wealth(-self.war_cost * attacker_wealth)
 
+        # Record the war damage
+        if attacker_wealth > 0:
+            attacker_damage = (self.war_cost * defender_wealth) / attacker_wealth
+        else:
+            attacker_damage = 1
+        if defender_wealth > 0:
+            defender_damage = (self.war_cost * attacker_wealth) / defender_wealth
+        else:
+            defender_damage = 1
+
+
+        self.war_scale += [attacker_damage, defender_damage]
+
+
     def copy(self):
         '''
         Make a deep copy of this object and return it, incrementing the depth.
         '''
         clone = copy.deepcopy(self)
         clone.depth += 1
-        #if self.verbose:
-        print "\t"*self.depth, "Spawning new model at depth", clone.depth
+        if self.verbose:
+            print "\t"*self.depth, "Spawning new model at depth", clone.depth
         return clone
 
     def plot(self, fig=None):
@@ -126,6 +141,12 @@ class Model(object):
 
 
 class Agent(object):
+    '''
+    An agent represents an atomic political actor in the model. 
+    This version of the agent is endowed with lookahead, and can make decisions 
+    to maximize wealth / power relative to its immediate neighbors on the 
+    network. 
+    '''
     def __init__(self, id_num, model):
         '''
         Create a new agent.
@@ -161,7 +182,7 @@ class Agent(object):
         target_id = max(vulnerability, 
             key=lambda x: vulnerability[x])
 
-        if vulnerability[target_id] > 0:
+        if vulnerability[target_id] > self.evaluate_position():
             target = self.model.agents[target_id]
             target.receive_threat(self.id_num)
 
