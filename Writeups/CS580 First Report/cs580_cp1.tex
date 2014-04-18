@@ -1,19 +1,18 @@
 \documentclass{article}
 	\usepackage{natbib}
+	\usepackage{booktabs}
+	
 
 \begin{document}
 
-\title{}
-	\author{}
-	\maketitle{}
-
-\begin{abstract}
-\end{abstract}
+\title{Toward Intelligent Political Actors}
+	\author{David Masad}
+	\maketitle
 
 \section{Introduction}
-The model presented by \citet{axelrod_1995}, commonly known as the Tribute Model, is an early example of what \citet{epstein_1996} refer to as `artifical socities' -- agent-based models in which simple rules lead to the emergence of phenomena with recognizable real-world analoges. Agents in the Tribute Model represent atomic political actors, interacting with each other via demands for tribute (hence the model's name) which are responded to with either payment or war. Past interactions may yield future cooperation, leading to the emergence of stable blocs of agents acting together against rival blocs. A similar approach was used by Axelrod's student Lars-Erik Cederman in the GeoSim family of models \cite{cederman_1997}, also with rich results.
+The model presented by \citet{axelrod_1997}, commonly known as the Tribute Model, is an early example of what \citet{epstein_1996} refer to as `artifical socities' -- agent-based models in which simple rules lead to the emergence of phenomena with recognizable real-world analoges. Agents in the Tribute Model represent atomic political actors, interacting with each other via demands for tribute (hence the model's name) which are responded to with either payment or war. Past interactions may yield future cooperation, leading to the emergence of stable blocs of agents acting together against rival blocs. A similar approach was used by Axelrod's student Lars-Erik Cederman in the GeoSim family of models \citep{cederman_2003}, also with rich results.
 
-Both Axelrod and Cederman's agents use simple heuristics to decide whether to go to war. While it is indeed an interesting result that many features of the international system emerge from agents using such heuristics, this is also a major departure of the models from both empirical evidence and qualitative theory. Even ancient proto-states carefully evaluated potential courses of action before going to war [[CITE]], and contemporary states have entire departments devoted to foreign policy planning. The Realist school of international relations theory goes even further, arguing that states make decisions rationally in response to the entirety of the information available to them. 
+Both Axelrod and Cederman's agents use simple heuristics to decide whether to go to war. While it is indeed an interesting result that many features of the international system emerge from agents using such heuristics, this is also a major departure of the models from both empirical evidence and qualitative theory. Even ancient proto-states carefully evaluated potential courses of action before going to war \citep{sheldon_1989}, and contemporary states have entire departments devoted to foreign policy planning. The Realist school of international relations theory goes even further, arguing that states make decisions rationally in response to the entirety of the information available to them \citep{waltz_2010}. 
 
 In this paper, I introduce a simplified model based primarily on the Axelrod Tribute model. I run the model using the original heuristics, showing that it display similar dynamics to the original model. I then endow the agents with an ability to look ahead and anticipate the results of different actions, as well as other agents' responses. I explore whether endowing the agents with this expanded intelligence changes the dynamics of the model, and whether agents capable of looking ahead further than others are more successful. 
 
@@ -27,7 +26,19 @@ A threatened agent now chooses whether to pay tribute or go to war. Paying tribu
 
 After all the agents have activated in a turn, the wealth of all agents increases by a fixed amount.
 
-[[ PARAMETER TABLE GOES HERE ]]
+\begin{table}[h]
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Parameter}               & \textbf{Default value}                            \\ \midrule
+Number of agents       & 10                                       \\
+Network topology       & Small-World                              \\
+War cost               & 0.25                                     \\
+Tribute cost           & 100                                      \\
+Starting wealth range        &  {[}300, 500{]} \\
+Wealth growth per step & 20                                      \\ \bottomrule
+\end{tabular}
+\caption{Model parameters}
+\end{table}
 
 \subsection{Agent Decisionmaking}
 The model architecture as described above represents the external environment within which the agents function, and remains fixed over the course of this project. The purpose of the study, however, is to analyze the effect of agent decisionmaking -- the internal environment. To do so, I implement three decisionmaking rules: the original heuristics described by Axelrod, relative wealth maximization with no lookahead, and relative wealth maximization with stochastic lookahead. In all cases, agents are endowed with perfect information.  I will then analyze how agent behavior, and model outcomes, vary with each decision model.
@@ -94,5 +105,6 @@ Currently, agents assess courses of action via lookahead by evaluating their sim
 
 Finally, the preliminary analysis described above was carried out by visualizing and qualitatively assessing the results of a small number of model runs. Ideally, more rigorous analysis of the outputs of multiple runs will yield more robust results.
 
-
+\bibliographystyle{chicago}
+\bibliography{TributePlanner}
 \end{document}
