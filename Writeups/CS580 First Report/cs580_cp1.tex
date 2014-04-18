@@ -10,7 +10,7 @@
 	\maketitle
 
 \section{Introduction}
-The model presented by \citet{axelrod_1997}, commonly known as the Tribute Model, is an early example of what \citet{epstein_1996} refer to as `artifical socities' -- agent-based models in which simple rules lead to the emergence of phenomena with recognizable real-world analoges. Agents in the Tribute Model represent atomic political actors, interacting with each other via demands for tribute (hence the model's name) which are responded to with either payment or war. Past interactions may yield future cooperation, leading to the emergence of stable blocs of agents acting together against rival blocs. A similar approach was used by Axelrod's student Lars-Erik Cederman in the GeoSim family of models \citep{cederman_2003}, also with rich results.
+The model presented by \citet{axelrod_1997}, commonly known as the Tribute Model, is an early example of what \citet{epstein_1996} refer to as `artificial societies' -- agent-based models in which simple rules lead to the emergence of phenomena with recognizable real-world analogue. Agents in the Tribute Model represent atomic political actors, interacting with each other via demands for tribute (hence the model's name) which are responded to with either payment or war. Past interactions may yield future cooperation, leading to the emergence of stable blocs of agents acting together against rival blocs. A similar approach was used by Axelrod's student Lars-Erik Cederman in the GeoSim family of models \citep{cederman_2003}, also with rich results.
 
 Both Axelrod and Cederman's agents use simple heuristics to decide whether to go to war. While it is indeed an interesting result that many features of the international system emerge from agents using such heuristics, this is also a major departure of the models from both empirical evidence and qualitative theory. Even ancient proto-states carefully evaluated potential courses of action before going to war \citep{sheldon_1989}, and contemporary states have entire departments devoted to foreign policy planning. The Realist school of international relations theory goes even further, arguing that states make decisions rationally in response to the entirety of the information available to them \citep{waltz_2010}. 
 
@@ -22,7 +22,7 @@ In this paper, I introduce a simplified model based primarily on the Axelrod Tri
 
 The model consists of \textbf{agents}, endowed with \textbf{wealth} and connected to one another via an undirected graph. Each tick of the model, some number of agents are activated one at a time. Active agents then may choose one of their neighbors on the graph to threaten (they may also choose not to threaten any neighbor). 
 
-A threatened agent now chooses whether to pay tribute or go to war. Paying tribute involves transfering a fixed, constant amount of wealth from the threatened agent to the threatening agent. War involves each agent reducing the opponent's wealth by a fixed fraction of their own wealth. In any case, an agent's wealth may not fall below zero.
+A threatened agent now chooses whether to pay tribute or go to war. Paying tribute involves transferring a fixed, constant amount of wealth from the threatened agent to the threatening agent. War involves each agent reducing the opponent's wealth by a fixed fraction of their own wealth. In any case, an agent's wealth may not fall below zero.
 
 After all the agents have activated in a turn, the wealth of all agents increases by a fixed amount.
 
