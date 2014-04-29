@@ -30,15 +30,6 @@ class Model(object):
             graph: Interction graph, where each node will become an agent.
         '''
 
-        self.N = len(graph)
-        self.graph = graph
-        # Instantiate the agents
-        self.agents = {}
-        for node in self.graph.nodes():
-            a = Agent(node, self)
-            self.graph.node[node]["Actor"] = a
-            self.agents[node] = a
-
         # Model parameters:
         self.war_cost = 0.25 # Fraction of wealth inflicted as damage in war
         self.tribute = 250   # Tribute paid in wealth
@@ -48,7 +39,19 @@ class Model(object):
         self.min_depth = 2 # Minimum agent depth
         self.max_depth = 4 # Maximum agent depth
 
+        self.heuristic = False
         self.random_execution = False
+
+        # Set up the graph
+        self.N = len(graph)
+        self.graph = graph
+        # Instantiate the agents
+        self.agents = {}
+        for node in self.graph.nodes():
+            a = Agent(node, self)
+            self.graph.node[node]["Actor"] = a
+            self.agents[node] = a
+
 
         self.step_counter = -1 
 
@@ -196,7 +199,10 @@ class Model(object):
             "tribute": self.tribute,
             "harvest": self.harvest,
             "actions_per_turn": self.actions_per_turn,
-            "random_execution": self.random_execution
+            "random_execution": self.random_execution,
+            "min_depth": self.min_depth,
+            "max_depth": self.max_depth,
+            "heuristic": self.heuristic
         }
 
         graph = nx.to_dict_of_dicts(self.graph)
@@ -267,8 +273,10 @@ class Agent(object):
         vulnerability = {}
         for nid in neighbor_ids:
             neighbor = self.model.agents[nid]
-            #vulnerability[nid] = self.evaluate_vulnerability(neighbor)
-            vulnerability[nid] = self.evaluate_gain(neighbor)
+            if self.model.heuristic:
+                vulnerability[nid] = self.evaluate_vulnerability(neighbor)
+            else:
+                vulnerability[nid] = self.evaluate_gain(neighbor)
 
         target_id = max(vulnerability, 
             key=lambda x: vulnerability[x])
