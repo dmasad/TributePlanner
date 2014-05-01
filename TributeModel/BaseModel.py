@@ -385,7 +385,9 @@ class Agent(object):
         '''
         Evaluate a model copy forward
         '''
-        for i in range(self.max_depth - model.depth):
+        steps = self.max_depth - model.depth
+        for i in range(steps):
+            model.depth += 1 # Temporary?
             model.step()
 
         return model.agents[self.id_num].evaluate_position()
