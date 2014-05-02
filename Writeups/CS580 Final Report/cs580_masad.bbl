@@ -11,6 +11,11 @@ Cederman, L.-E. (2003).
 \newblock Modeling the size of wars: from billiard balls to sandpiles.
 \newblock {\em American Political Science Review\/}~{\em 97\/}(01), 135–150.
 
+\bibitem[\protect\citeauthoryear{Chaslot}{Chaslot}{2010}]{chaslot_2010}
+Chaslot, G. (2010).
+\newblock {\em Monte-carlo tree search}.
+\newblock Ph.\ D. thesis, Maastricht University.
+
 \bibitem[\protect\citeauthoryear{Epstein and Axtell}{Epstein and
   Axtell}{1996}]{epstein_1996}
 Epstein, J.~M. and R.~L. Axtell (1996, October).
@@ -28,6 +33,18 @@ Mearsheimer, J.~J. (1995).
 \newblock A realist reply.
 \newblock {\em International Security\/}~{\em 20\/}(1), 82–93.
 
+\bibitem[\protect\citeauthoryear{Min}{Min}{2002}]{min_2002}
+Min, B.~W. (2002).
+\newblock {\em Trade and war in cellular automata worlds: A computer simulation
+  of interstate interactions}.
+\newblock {Ph.D.}, The Ohio State University, United States -- Ohio.
+
+\bibitem[\protect\citeauthoryear{Russell and Norvig}{Russell and
+  Norvig}{2009}]{russell_2009}
+Russell, S. and P.~Norvig (2009, December).
+\newblock {\em Artificial Intelligence: A Modern Approach\/} (3 edition ed.).
+\newblock Upper Saddle River: Prentice Hall.
+
 \bibitem[\protect\citeauthoryear{Sheldon}{Sheldon}{1989}]{sheldon_1989}
 Sheldon, R.~M. (1989).
 \newblock Spying in mesopotamia: The world's oldest classified documents.".
@@ -37,5 +54,11 @@ Sheldon, R.~M. (1989).
 Waltz, K.~N. (2010).
 \newblock {\em Theory of international politics}.
 \newblock Waveland Press.
+
+\bibitem[\protect\citeauthoryear{Watts and Strogatz}{Watts and
+  Strogatz}{1998}]{watts_1998}
+Watts, D.~J. and S.~H. Strogatz (1998, June).
+\newblock Collective dynamics of ‘small-world’ networks.
+\newblock {\em Nature\/}~{\em 393\/}(6684), 440--442.
 
 \end{thebibliography}
